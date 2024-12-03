@@ -1,0 +1,123 @@
+version: '3'
+
+services:
+  cafe_db:
+    container_name: cafe_db
+    image: postgres:12.2
+    ports:
+      - 5433:5432
+    env_file:
+      - .env
+    networks:
+      - tez_network
+
+  cafe_web:
+    container_name: tezweb
+    build: .
+    # command: gunicorn -c gunicorn_conf/dev.conf.py tbserver.wsgi:application
+    command: python manage.py runserver 0.0.0.0:4000
+    volumes:
+      - .:/code
+    ports:
+      - "4000:4000"
+      - "8888:8888"
+      - "8000:8000" # Debugger port
+      - "8089:8089" # Locust port
+    depends_on:
+      - tezdb
+    links:
+      - redis:redis
+    env_file:
+      - .env.dev
+    networks:
+      - tez_network
+
+  tezweb_asgi:
+    container_name: tezweb_asgi
+    build: .
+    command: daphne -b 0.0.0.0 -p 4001 tbserver.asgi:application
+    volumes:
+      - .:/code
+    ports:
+      - "4001:4001"
+    depends_on:
+      - tezdb
+    links:
+      - redis:redis
+    env_file:
+      - .env.dev
+    networks:
+      - tez_network
+
+  teznginx_dev:
+    container_name: teznginx_dev
+    restart: always
+    build: ./dev_nginx
+
+    ports:
+      - "3030:3030"
+      - "3031:3031"
+    networks:
+      - tez_network
+    volumes:
+      - static_volume_tezbor_prod:/static
+      - media_volume_tezbor_prod:/media
+      - media_sftp_tezbor_prod:/media_sftp
+      - loggers_volume:/loggers
+      - .:/code
+    depends_on:
+      - tezweb
+
+  tez_celery:
+    build: .
+    container_name: tez_celery
+    command: celery -A tbserver worker -l INFO
+    volumes:
+      - .:/code
+    networks:
+      - tez_network
+    env_file:
+      - .env.dev
+    depends_on:
+      - tezweb
+      - redis
+
+  tez_flower:
+    build: .
+    container_name: tez_flower
+    command: celery flower --persisten=True
+    ports:
+      - 8889:8888
+    volumes:
+      - .:/data
+    networks:
+      - tez_network
+    env_file:
+      - .env.dev
+    depends_on:
+      - tezweb
+      - redis
+
+  tez_beat:
+    build: .
+    command: celery -A tbserver beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/code
+    networks:
+      - tez_network
+    env_file:
+      - .env.dev
+    depends_on:
+      - tezweb
+      - tez_celery
+      - redis
+
+volumes:
+    # tezdb_data_prod:
+    static_volume_tezbor_prod:
+    media_volume_tezbor_prod:
+    loggers_volume:
+    media_sftp_tezbor_prod:
+
+networks:
+  tez_network: 

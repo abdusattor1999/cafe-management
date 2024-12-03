@@ -1,0 +1,94 @@
+env
+venv
+.env
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+/media/
+/staticfiles/
+/*.py[cod]
+*.sqlite3
+*.pyo
+*.cover
+*.orig
+*.rej
+*.swo
+*.swp
+*.swn
+*.sml
+*.pid
+*.log
+*.bak
+*.swp
+*.swo
+*.tmp
+*.DS_Store
+
+# Environment variables
+.env
+
+# Django migrations
+**/migrations/**
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+
+# Django stuff:
+local_settings.py
+db.sqlite3
+
+# Flask and Django
+instance/
+.webassets-cache
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
