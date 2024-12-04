@@ -1,6 +1,6 @@
 # Hello this is cafe crm project
 
-#Setup
+# Setup
 To set up this project your local machine download it by way convenient for you like http, ssh or downloading zip file
 
 After downloading edit name of .env.example to .env
@@ -10,13 +10,13 @@ docker compose up --build
 ```
 
 ---
-#Endpoints
+# Endpoints
 
-# base url in localhost is: "http://127.0.0.1:8000/"
+## base url in localhost is: "http://127.0.0.1:8000/"
 ---
-#User endpoints
+## User endpoints
 
-###User registration endpoint
+### User registration endpoint
 POST -> {{base_url}}/registration/
 ```
 {
@@ -34,7 +34,7 @@ POST -> {{base_url}}/verification/
 }
 ```
 
-###Authentication (Login)
+### Authentication (Login)
 POST -> {{base_url}}/authentication/
 ```
 {
@@ -46,9 +46,9 @@ POST -> {{base_url}}/authentication/
 
 
 ---
-#Card related endpoints
+# Card related endpoints
 
-###Cart add // Authentication required
+### Cart add // Authentication required
 POST -> {{base_url}}/cart/
 ```
 {
@@ -57,8 +57,8 @@ POST -> {{base_url}}/cart/
 }
 ```
 
-###Delete all cart items // Authentication required
+### Delete all cart items // Authentication required
 DELETE -> {{base_url}}/cart/
 
-###CartItem delete // Authentication required
+### CartItem delete // Authentication required
 DELETE -> {{base_url}}/cart/<id>
