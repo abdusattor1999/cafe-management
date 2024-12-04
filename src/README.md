@@ -1,3 +1,17 @@
+# Hello this is cafe crm project
+
+#Setup
+To set up this project your local machine download it by way convenient for you like http, ssh or downloading zip file
+
+After downloading edit name of .env.example to .env
+Build docker compose:
+```
+docker compose up --build 
+```
+
+---
+#Endpoints
+
 # base url in localhost is: "http://127.0.0.1:8000/"
 ---
 #User endpoints

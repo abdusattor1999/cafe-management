@@ -5,8 +5,10 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
 from .models import Product, Category, Cart, CartItem
-from .serializers import ProductSerializer, CategorySerializer, CartSerializer
+from .serializers import ProductSerializer, CategorySerializer, CartSerializer, CartItemSerializer
 from rest_framework.reverse import reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 class ProductViewset(ModelViewSet):
     queryset = Product.objects.all()
@@ -45,12 +47,18 @@ class CategoryListView(APIView):
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class CartView(APIView):
 
-    def get(self, request):
+    def get(self, request, pk=None):
         cart, created = Cart.objects.get_or_create(user=request.user)
         serializer = CartSerializer(cart)
+        if pk:
+            try:
+                cart_item = CartItem.objects.get(cart=cart, pk=pk)
+                serializer = CartItemSerializer(cart_item)
+            except CartItem.DoesNotExist:
+                return Response({"error": "Cart item not found"}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.data)
 
     def post(self, request):

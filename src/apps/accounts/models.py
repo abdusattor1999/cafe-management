@@ -51,3 +51,8 @@ def send_activation_link_for_new_users(sender, instance, created, **kwargs):
     if created:
         pass
         
+class Room(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
