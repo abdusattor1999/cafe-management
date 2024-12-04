@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.mail import send_mail
-from django.urls import reverse
+from rest_framework.reverse import reverse
 from .models import User
 from .serializers import PublicUserSerializer, LoginSerializer, SignupSerializer
 from rest_framework.viewsets import ModelViewSet
@@ -68,9 +68,18 @@ class UserViewset(ModelViewSet):
         serializer.save()
         return Response(serializer.data)
 
+    def list(self, request, *args, **kwargs):
+        user_list_url = reverse('users_list', request=request)
+        return Response({'redirect_url': user_list_url}, status=302)
+
     @action(detail=False, methods=['POST'], url_path='me')
     def me(self, request):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
     
 
+class UserListView(APIView):
+    def get(self, request):
+        users = User.objects.all()
+        serializer = PublicUserSerializer(users, many=True)
+        return Response(serializer.data)
